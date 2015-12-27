@@ -15,11 +15,11 @@ output:
 
 This is the project report for coursera practical machine learning course.
 
-This report focus on data from Weight Lifting Exercise. Among the 5 classes of weight lifting (Class A,B,C,D,E), only Class A is the correct training method, while others are training method with common mistakes. The report use other varaibles in the dataset to predict the class of weight lifting.
+This report focus on data from Weight Lifting Exercise. Among the 5 classes of weight lifting (Class A,B,C,D,E), only Class A is the correct training method, while others are training method with common mistakes. The report use other variables in the dataset to predict the class of weight lifting.
 
-More information are available from Weight Lifting Exercises Dataset section in following website: http://groupware.les.inf.puc-rio.br/har
+More information is available from Weight Lifting Exercises Dataset section in following website: http://groupware.les.inf.puc-rio.br/har
 
-# Data Preprocessing
+# Data Pre-processing
 
 Load the required ggplot2 and caret library for prediction.
 
@@ -29,7 +29,7 @@ library(caret)
 library(randomForest)
 ```
 
-Download the dataset and preprocess the data. Some of the data are missing, so it will be marked as NA for
+Download the dataset and pre-process the data. Some of the data are missing, so it will be marked as NA.
 
 ```{r}
 pml_train_url = "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
@@ -39,7 +39,7 @@ if (!file.exists("pml-training.csv")) {
     download.file(pml_train_url, destfile="pml-training.csv", method="curl")
 }
 if (!file.exists("pml-testing.csv")) {
-download.file(pml_test_url, destfile="pml-testing.csv", method="curl")
+    download.file(pml_test_url, destfile="pml-testing.csv", method="curl")
 }
 
 pml_training <- read.csv("pml-training.csv", na.strings=c("NA",""))
@@ -53,9 +53,9 @@ dim(pml_training)
 dim(pml_testing)
 ```
 
-First of all, the training data has to be further splitted into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, To achieve the reproducibility, the seed should be set to guarantee that goal.
+First of all, the training data has to be further partitioned into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, to achieve the reproducibility, the seed should be set to guarantee that goal.
 
-70% percents of the training data is used for traning, while the remaining 30% is used for testing.
+70% percent of the training data is used for training, while the remaining 30% is used for testing.
 
 ```{r}
 set.seed(20151227)
@@ -86,7 +86,7 @@ testing <- testing[, NA90p==TRUE]
 
 # Random Forest
 
-The random forest is the tried as the first algorithm. The result is shown as below, the error rate on training data is 99.7% and the Out of Sample Error is 0.3%.
+The random forest is tried as the first algorithm. The result is shown as below, the error rate on training data is 99.7% and the Out of Sample Error is 0.3%.
 
 ```{r}
 fit <- randomForest(classe ~ ., data = training)
@@ -104,7 +104,7 @@ confusionMatrix(testing$classe, testing_prediction)
 
 # Testset Prediction
 
-Since the Random Forest has already generate a very good result and fitted model, and it has proven performance in the cross validation, it will be used in the prediction. Transform the test set into the same data format as the training set to fit the prediction model. 
+Since the Random Forest has already generated a very good result and fitted model, and it has proven performance in the cross validation, it will be used in the prediction. Transform the test set into the same data format as the training set to fit the prediction model. 
 
 ```{r}
 pml_testing <- pml_testing[, c(-1:-5)]
