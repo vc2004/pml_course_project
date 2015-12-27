@@ -82,7 +82,7 @@ img {
 <div id="TOC">
 <ul>
 <li><a href="#executive-summary">Executive Summary</a></li>
-<li><a href="#data-preprocessing">Data Preprocessing</a></li>
+<li><a href="#data-pre-processing">Data Pre-processing</a></li>
 <li><a href="#random-forest">Random Forest</a></li>
 <li><a href="#cross-validation">Cross Validation</a></li>
 <li><a href="#testset-prediction">Testset Prediction</a></li>
@@ -91,11 +91,12 @@ img {
 
 <div id="executive-summary" class="section level1">
 <h1>Executive Summary</h1>
-<p>This report focus on data from Weight Lifting Exercise. Among the 6 classes of weight lifting, only Class A is the correct training method, while others are training method with common mistakes. The report use other varaibles in the dataset to predict the class of weight lifting.</p>
-<p>More information are available from Weight Lifting Exercises Dataset section in following website: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a></p>
+<p>This is the project report for coursera practical machine learning course.</p>
+<p>This report focus on data from Weight Lifting Exercise. Among the 5 classes of weight lifting (Class A,B,C,D,E), only Class A is the correct training method, while others are training method with common mistakes. The report use other variables in the dataset to predict the class of weight lifting.</p>
+<p>More information is available from Weight Lifting Exercises Dataset section in following website: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a></p>
 </div>
-<div id="data-preprocessing" class="section level1">
-<h1>Data Preprocessing</h1>
+<div id="data-pre-processing" class="section level1">
+<h1>Data Pre-processing</h1>
 <p>Load the required ggplot2 and caret library for prediction.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 <span class="kw">library</span>(caret)</code></pre>
@@ -103,7 +104,7 @@ img {
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(randomForest)</code></pre>
 <pre><code>## randomForest 4.6-12
 ## Type rfNews() to see new features/changes/bug fixes.</code></pre>
-<p>Download the dataset and preprocess the data. Some of the data are missing, so it will be marked as NA for</p>
+<p>Download the dataset and pre-process the data. Some of the data are missing, so it will be marked as NA.</p>
 <pre class="sourceCode r"><code class="sourceCode r">pml_train_url =<span class="st"> &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv&quot;</span>
 pml_test_url =<span class="st"> &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv&quot;</span>
 
@@ -111,7 +112,7 @@ if (!<span class="kw">file.exists</span>(<span class="st">&quot;pml-training.csv
     <span class="kw">download.file</span>(pml_train_url, <span class="dt">destfile=</span><span class="st">&quot;pml-training.csv&quot;</span>, <span class="dt">method=</span><span class="st">&quot;curl&quot;</span>)
 }
 if (!<span class="kw">file.exists</span>(<span class="st">&quot;pml-testing.csv&quot;</span>)) {
-<span class="kw">download.file</span>(pml_test_url, <span class="dt">destfile=</span><span class="st">&quot;pml-testing.csv&quot;</span>, <span class="dt">method=</span><span class="st">&quot;curl&quot;</span>)
+    <span class="kw">download.file</span>(pml_test_url, <span class="dt">destfile=</span><span class="st">&quot;pml-testing.csv&quot;</span>, <span class="dt">method=</span><span class="st">&quot;curl&quot;</span>)
 }
 
 pml_training &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;pml-training.csv&quot;</span>, <span class="dt">na.strings=</span><span class="kw">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;&quot;</span>))
@@ -121,8 +122,8 @@ pml_testing &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span
 <pre><code>## [1] 19622   160</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(pml_testing)</code></pre>
 <pre><code>## [1]  20 160</code></pre>
-<p>First of all, the training data has to be further splitted into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, To achieve the reproducibility, the seed should be set to guarantee that goal.</p>
-<p>70% percents of the training data is used for traning, while the remaining 30% is used for testing.</p>
+<p>First of all, the training data has to be further partitioned into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, to achieve the reproducibility, the seed should be set to guarantee that goal.</p>
+<p>70% percent of the training data is used for training, while the remaining 30% is used for testing.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">20151227</span>)
 
 inTrain &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(pml_training$classe, <span class="dt">p=</span><span class="fl">0.70</span>, <span class="dt">list=</span><span class="ot">FALSE</span>)
@@ -142,7 +143,7 @@ testing &lt;-<span class="st"> </span>testing[, NA90p==<span class="ot">TRUE</sp
 </div>
 <div id="random-forest" class="section level1">
 <h1>Random Forest</h1>
-<p>The random forest is the tried as the first algorithm. The result is shown as below, the error rate on training data is 99.74%.</p>
+<p>The random forest is tried as the first algorithm. The result is shown as below, the error rate on training data is 99.7% and the Out of Sample Error is 0.3%.</p>
 <pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">randomForest</span>(classe ~<span class="st"> </span>., <span class="dt">data =</span> training)
 fit</code></pre>
 <pre><code>## 
@@ -163,7 +164,7 @@ fit</code></pre>
 </div>
 <div id="cross-validation" class="section level1">
 <h1>Cross Validation</h1>
-<p>To cross validate the result, the testing set is predicted and compared the original result. The accuracy is 99.75%, which is pretty good and consistent with the training set result.</p>
+<p>To cross validate the result, the testing set is predicted and compared the original result. The accuracy is 99.63%, which is pretty good and consistent with the training set result.</p>
 <pre class="sourceCode r"><code class="sourceCode r">testing_prediction &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, <span class="dt">newdata=</span>testing)
 <span class="kw">confusionMatrix</span>(testing$classe, testing_prediction)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
@@ -200,7 +201,7 @@ fit</code></pre>
 </div>
 <div id="testset-prediction" class="section level1">
 <h1>Testset Prediction</h1>
-<p>It is time to predit the test set. Transform the test set into the same data format as the training set to fit the prediction model. The last columns are also removed because it is the problem id.</p>
+<p>Since the Random Forest has already generated a very good result and fitted model, and it has proven performance in the cross validation, it will be used in the prediction. Transform the test set into the same data format as the training set to fit the prediction model.</p>
 <pre class="sourceCode r"><code class="sourceCode r">pml_testing &lt;-<span class="st"> </span>pml_testing[, <span class="kw">c</span>(-<span class="dv">1</span>:-<span class="dv">5</span>)]
 pml_testing &lt;-<span class="st"> </span>pml_testing[, -nzv_train]
 pml_testing &lt;-<span class="st"> </span>pml_testing[, NA90p==<span class="ot">TRUE</span>]

@@ -4,11 +4,13 @@ Liang Dong
 
 # Executive Summary
 
-This report focus on data from Weight Lifting Exercise. Among the 6 classes of weight lifting, only Class A is the correct training method, while others are training method with common mistakes. The report use other varaibles in the dataset to predict the class of weight lifting.
+This is the project report for coursera practical machine learning course.
 
-More information are available from Weight Lifting Exercises Dataset section in following website: http://groupware.les.inf.puc-rio.br/har
+This report focus on data from Weight Lifting Exercise. Among the 5 classes of weight lifting (Class A,B,C,D,E), only Class A is the correct training method, while others are training method with common mistakes. The report use other variables in the dataset to predict the class of weight lifting.
 
-# Data Preprocessing
+More information is available from Weight Lifting Exercises Dataset section in following website: http://groupware.les.inf.puc-rio.br/har
+
+# Data Pre-processing
 
 Load the required ggplot2 and caret library for prediction.
 
@@ -31,7 +33,7 @@ library(randomForest)
 ## Type rfNews() to see new features/changes/bug fixes.
 ```
 
-Download the dataset and preprocess the data. Some of the data are missing, so it will be marked as NA for
+Download the dataset and pre-process the data. Some of the data are missing, so it will be marked as NA.
 
 
 ```r
@@ -42,7 +44,7 @@ if (!file.exists("pml-training.csv")) {
     download.file(pml_train_url, destfile="pml-training.csv", method="curl")
 }
 if (!file.exists("pml-testing.csv")) {
-download.file(pml_test_url, destfile="pml-testing.csv", method="curl")
+    download.file(pml_test_url, destfile="pml-testing.csv", method="curl")
 }
 
 pml_training <- read.csv("pml-training.csv", na.strings=c("NA",""))
@@ -68,9 +70,9 @@ dim(pml_testing)
 ## [1]  20 160
 ```
 
-First of all, the training data has to be further splitted into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, To achieve the reproducibility, the seed should be set to guarantee that goal.
+First of all, the training data has to be further partitioned into training and testing set, which the testing set is used for characterising and cross-validating the performance of the prediction other than the final prediction set. Also, to achieve the reproducibility, the seed should be set to guarantee that goal.
 
-70% percents of the training data is used for traning, while the remaining 30% is used for testing.
+70% percent of the training data is used for training, while the remaining 30% is used for testing.
 
 
 ```r
@@ -104,7 +106,7 @@ testing <- testing[, NA90p==TRUE]
 
 # Random Forest
 
-The random forest is the tried as the first algorithm. The result is shown as below, the error rate on training data is 99.74%.
+The random forest is tried as the first algorithm. The result is shown as below, the error rate on training data is 99.7% and the Out of Sample Error is 0.3%.
 
 
 ```r
@@ -132,7 +134,7 @@ fit
 
 # Cross Validation
 
-To cross validate the result, the testing set is predicted and compared the original result. The accuracy is 99.75%, which is pretty good and consistent with the training set result.
+To cross validate the result, the testing set is predicted and compared the original result. The accuracy is 99.63%, which is pretty good and consistent with the training set result.
 
 
 ```r
@@ -176,7 +178,7 @@ confusionMatrix(testing$classe, testing_prediction)
 
 # Testset Prediction
 
-It is time to predit the test set. Transform the test set into the same data format as the training set to fit the prediction model. The last columns are also removed because it is the problem id.
+Since the Random Forest has already generated a very good result and fitted model, and it has proven performance in the cross validation, it will be used in the prediction. Transform the test set into the same data format as the training set to fit the prediction model. 
 
 
 ```r
